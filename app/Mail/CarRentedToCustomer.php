@@ -27,7 +27,7 @@ class CarRentedToCustomer extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Car Rented To Customer',
+            subject: 'Car Rent Confirmed',
         );
     }
 
@@ -37,7 +37,7 @@ class CarRentedToCustomer extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emailIncoice',
+            view: 'email.customerInvoice',
         );
     }
 

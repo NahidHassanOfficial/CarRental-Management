@@ -13,11 +13,8 @@ class PageController extends Controller
 
     public function adminDashboard()
     {
-        //car count number of cars
         $carCount = Car::count();
-        //car count number of available cars
         $availableCarCount = Car::where('availability', '1')->count();
-        //rental count number of rentals
         $rentalCount = Rental::count();
 
         $totalEarning = Rental::where('status', null)->sum('total_cost');

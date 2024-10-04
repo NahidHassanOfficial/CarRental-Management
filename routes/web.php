@@ -8,19 +8,25 @@ use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\RentalController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminVerificationMiddleware;
+use App\Http\Middleware\AuthCheckMiddleware;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TokenVerificationMiddleware;
-use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PageController::class, 'homePage'])->name(name: 'index');
-Route::get('/login', [PageController::class, 'loginPage'])->middleware(RedirectIfAuthenticated::class);
-Route::get('/register', [PageController::class, 'registerPage']);
+Route::middleware([AuthCheckMiddleware::class])->group(function () {
+    Route::get('/', [PageController::class, 'homePage'])->name(name: 'index');
+    Route::get('/cars', [CarController::class, 'carPage']);
+    Route::get('/profile/booking/{carID?}', [PageController::class, 'bookingPage'])->name('booking.page');
+});
 
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/register', [UserController::class, 'register']);
+Route::middleware([RedirectIfAuthenticated::class])->group(function () {
+    Route::get('/login', [PageController::class, 'loginPage']);
+    Route::get('/register', [PageController::class, 'registerPage']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [UserController::class, 'register'])->name('user.register');
+});
+
 Route::get('/logout', [UserController::class, 'logout']);
-
-Route::get('/cars', [CarController::class, 'carPage']);
 
 Route::middleware([TokenVerificationMiddleware::class])->group(function () {
 
@@ -29,7 +35,6 @@ Route::middleware([TokenVerificationMiddleware::class])->group(function () {
     Route::get('/profile/setting', [PageController::class, 'settingPage'])->name('profile.setting');
     Route::post('/profile/setting', [UserController::class, 'updateUserInfo'])->name('update.userInfo');
 
-    Route::get('/profile/booking/{carID?}', [PageController::class, 'bookingPage'])->name('booking.page');
     Route::get('/profile/booking/confirm/{carID}/{pickDate}/{dropDate}', [PageController::class, 'bookingConfirmPage'])->name('confirm.page');
     Route::post('/profile/booking/confirmed', [RentalController::class, 'bookingConfirm'])->name('booking.confirmed');
     Route::get('/profile/booking/cancel/{id}', [RentalController::class, 'bookingCancel'])->name('booking.cancel');

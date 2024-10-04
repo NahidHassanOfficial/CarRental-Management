@@ -28,7 +28,7 @@ class CarRentedToAdmin extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Car Rented To Admin',
+            subject: 'A new car is Booked!',
         );
     }
 
@@ -38,7 +38,7 @@ class CarRentedToAdmin extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emailIncoice',
+            view: 'email.adminInvoice',
         );
     }
 

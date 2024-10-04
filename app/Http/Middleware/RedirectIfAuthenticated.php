@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectIfAuthMiddleware
+class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
@@ -17,21 +17,21 @@ class RedirectIfAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $token = $request->cookie('token');
-        try {
-            if ($token) {
-                $result = JWTToken::verifyToken($token);
-                if ($result != 'unauthorized') {
-                    return redirect()->route('profile');
-                } else {
-                    return $next($request);
-                }
-            } else {
+        if (!$token) {
+            return $next($request);
+        } else {
+            $result = JWTToken::verifyToken($token);
+            if ($result == 'unauthorized') {
                 return $next($request);
             }
 
-        } catch (\Throwable $th) {
-            return $next($request);
+            if ($result->role == 'customer') {
+                return redirect()->route('profile');
+            } elseif ($result->role == 'admin') {
+                return redirect()->route('dashboard');
+            } else {
+                return $next($request);
+            }
         }
-
     }
 }

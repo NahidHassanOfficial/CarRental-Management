@@ -31,6 +31,17 @@ class RentalController extends Controller
         $rental = Rental::find($id);
         $carId = $rental->car_id;
 
+        $now = Carbon::now()->toDateString();
+        if ($pickDate < $now || $dropDate < $now) {
+            noty()->error('Pick date and drop date cannot be past dates');
+            return redirect()->back();
+        }
+
+        if ($dropDate < $pickDate) {
+            noty()->error('Drop date must be the same date as pick date or a future date');
+            return redirect()->back();
+        }
+
         // Check if the car is already booked for the date range
         $existingRental = Rental::where('car_id', $carId)
             ->where('id', '!=', $rental->id)

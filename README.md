@@ -1,14 +1,7 @@
 # Car Rental Web Application
 
-This is a Car Rental Web Application built using Laravel. The application allows users to browse available cars, make bookings, and manage their rentals. The system also includes an admin dashboard for managing cars, rentals, and customer details.
-
-## Demo
-
-You can watch a demonstration video of this project on Google Drive:  
-[Project Demo Video](https://drive.google.com/file/d/1iReRwBSqJ-80c6O2cFIgcbYOpkkphHLP/view?usp=sharing)
-
-
-## Features
+> [!NOTE]
+> This is a Car Rental Web Application built using Laravel. The application allows users to browse available cars, make bookings, and manage their rentals. The system also includes an admin dashboard for managing cars, rentals, and customer details.
 
 ### Admin Dashboard
 - **Manage Cars**: Add, edit, and delete car details (name, brand, model, year, type, daily rent price, availability, image).
@@ -31,4 +24,3 @@ You can watch a demonstration video of this project on Google Drive:
 
 ### Technical Features
 - **Role-based Access Control**: Admins can manage cars, rentals, and customers, while customers can only view and manage their own bookings.
-- **No Payment Integration**: The system currently operates in "Cash On Delivery" mode.

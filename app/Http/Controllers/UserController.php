@@ -12,31 +12,25 @@ class UserController extends Controller
 
     public function updateUserInfo(Request $request)
     {
-        // Validate only the fields that are provided
         $validatedRequest = $request->validate([
             'email' => 'sometimes|email',
             'name' => 'sometimes|max:20',
-            'password' => 'sometimes|nullable', // Allow password to be nullable
+            'password' => 'sometimes|nullable',
         ]);
 
-        // Find the user based on the ID passed in the header
         $user = User::find($request->header('id'));
 
         if ($user) {
-            // Loop through the validated fields and update only if there's a difference
             foreach ($validatedRequest as $key => $value) {
-                // Only update password if it is not null (to avoid setting password to null)
                 if ($key === 'password' && is_null($value)) {
-                    continue; // Skip password update if null
+                    continue;
                 }
 
-                // Update only if the value has changed
                 if ($user->$key !== $value) {
                     $user->$key = $value;
                 }
             }
 
-            // Save only if there's any change
             if ($user->isDirty()) {
                 $user->save();
                 noty()->success('Updated successfully');
@@ -61,19 +55,19 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        $userId = User::where('email', $validatedRequest['email'])
+        $user = User::where('email', $validatedRequest['email'])
             ->where('password', $validatedRequest['password'])
-            ->select('id')->first();
+            ->select('id', 'role')->first();
 
-        if ($userId != null) {
+        if ($user->id != null) {
             $time = time() + 60 * 60 * 24 * 7;
-            $token = JWTToken::createToken($request->input('email'), $userId->id, $time);
+            $token = JWTToken::createToken($request->input('email'), $user->id, $time, $user->role);
             $intendedUrl = $request->input('intended_url');
             if ($intendedUrl == null) {
                 $intendedUrl = route('profile');
             }
             noty()->success('Login Successfull');
-            return redirect()->intended($intendedUrl)->cookie('token', $token, 60 * 24 * 7);
+            return redirect()->intended($intendedUrl ?? route('home'))->cookie('token', $token, 60 * 24 * 7);
 
         } else {
             noty()->error('Login Failed');
@@ -83,28 +77,19 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        try {
-            $validatedRequest = $request->validate([
-                'email' => 'required|email',
-                'name' => 'required',
-                'password' => 'required',
-            ]);
+        $validatedRequest = $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'name' => 'required|min:4',
+            'password' => 'required',
+        ]);
 
-            User::create([
-                'name' => $validatedRequest['name'],
-                'email' => $validatedRequest['email'],
-                'password' => $validatedRequest['password'],
-            ]);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'User Registration Successfully',
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Something Wrong! Registration Failed',
-            ], 400);
-        }
+        User::create([
+            'name' => $validatedRequest['name'],
+            'email' => $validatedRequest['email'],
+            'password' => $validatedRequest['password'],
+        ]);
+        noty()->success('User Registration Successfull');
+        return redirect()->to('/login');
 
     }
 

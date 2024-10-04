@@ -25,15 +25,8 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/toastify.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/progress.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-    <!-- JavaScript Libraries -->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/toastify.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
-    <script src="{{ asset('js/config.js') }}"></script>
 </head>
 
 <body>
@@ -73,8 +66,10 @@
                         <a href="#" class="nav-item nav-link">Contact</a>
                     </div>
 
-                    @if (request()->header('id'))
+                    @if (request()->header('role') == 'customer')
                         <a href="{{ route('profile') }}" class="btn btn-primary rounded-pill py-2 px-4">Profile</a>
+                    @elseif (request()->header('role') == 'admin')
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary rounded-pill py-2 px-4">Profile</a>
                     @else
                         <a href="/login" class="btn btn-primary rounded-pill py-2 px-4">Login</a>
                     @endif
@@ -163,8 +158,8 @@
 
 
     <!-- JavaScript Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('lib/wow/wow.min.js') }}"></script>
     <script src="{{ asset('lib/easing/easing.min.js') }}"></script>
     <script src="{{ asset('lib/waypoints/waypoints.min.js') }}"></script>

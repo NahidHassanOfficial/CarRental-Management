@@ -18,7 +18,11 @@ class InvoiceController extends Controller
         Mail::to('hasos19585@sgatra.com')->send(new CarRentedToAdmin($rental));
 
         noty()->success('Invoice Sent To Email');
-        return redirect()->route('profile');
+        if (request()->header('role') == 'admin') {
+            return redirect()->route('dashboard.rentals');
+        } else {
+            return redirect()->route('profile');
+        }
 
     }
 }

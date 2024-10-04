@@ -16,7 +16,7 @@ class JWTToken
         //
     }
 
-    public static function createToken($userEmail, $userID, $time)
+    public static function createToken($userEmail, $userID, $time, $role)
     {
         $key = env('JWT_KEY');
         $payload = [
@@ -25,6 +25,7 @@ class JWTToken
             'exp' => $time,
             'userEmail' => $userEmail,
             'userID' => $userID,
+            'role' => $role,
         ];
         return JWT::encode($payload, $key, 'HS256');
     }

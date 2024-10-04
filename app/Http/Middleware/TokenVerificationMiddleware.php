@@ -26,6 +26,7 @@ class TokenVerificationMiddleware
             if ($isCustomer) {
                 $request->headers->set('email', $result->userEmail);
                 $request->headers->set('id', $result->userID);
+                $request->headers->set('role', 'customer');
                 return $next($request);
             } else {
                 return redirect('/login')->with('intended_url', $request->url());

@@ -87,7 +87,8 @@
                     <div class="categories-item p-4">
                         <div class="categories-item-inner">
                             <div class="categories-img rounded-top">
-                                <img src="{{ asset($car->image) }}" class="img-fluid w-100 rounded-top" alt="Car Image">
+                                <img src="{{ asset($car->image) }}" class="img-fluid w-100 rounded-top"
+                                    style="height: 200px; width:200px" alt="Car Image">
                             </div>
                             <div class="categories-content rounded-bottom p-4">
                                 <h4>{{ $car->brand }}</h4>
